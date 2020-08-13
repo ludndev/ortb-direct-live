@@ -6,8 +6,8 @@ const path = require('path')
 
 function createWindow () {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    minWidth: 800,
+    minHeight: 600,
     frame: true,
     show: false,
     icon: __dirname + '/icon.png',
@@ -19,6 +19,8 @@ function createWindow () {
     }
   })
 
+  win.setBackgroundColor('#000')
+
   win.on('page-title-updated', (event) => {
     event.preventDefault()
   })
@@ -27,9 +29,16 @@ function createWindow () {
 
   win.setMenu(null);
 
-  win.loadURL("https://player.infomaniak.com/?channel=69891&player=10535&ref=me.ludndev.ortbdirect")
+  //win.loadURL(`file://${__dirname}/app.html`)
+  win.loadFile('./app.html')
+
+  /*win.once('ready-to-show', () => {
+    //win.show()
+  })*/
 
   win.show()
+
+  //win.loadURL("https://player.infomaniak.com/?channel=69891&player=10535&ref=me.ludndev.ortbdirect")
 
   // win.openDevTools()
 }
