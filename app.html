@@ -19,31 +19,8 @@
 		</p>
 	</div>
 
-	<script type="text/javascript">
-
-		var counter = 5;
-		var intervalId = null;
-		function finish() {
-			clearInterval(intervalId);
-			location.replace("https://player.infomaniak.com/?channel=69891&player=10535&ref=me.ludndev.ortbdirect");
-		}
-		function countDown() {
-		    counter--;
-		    if(counter == 0) finish();
-		    else {
-		    	console.log('counter : ' + counter);
-		    }
-		}
-		function start(){
-		  	intervalId = setInterval(countDown, 1000);
-		}
-
-		window.addEventListener("DOMContentLoaded", (event) => {
-			console.log("dom loaded");
-			start();
-		});	
-
-	</script>
+	<script src="./sweetalert.min.js"></script>
+	<script src="./app.js"></script>
 
 </body>
 </html>

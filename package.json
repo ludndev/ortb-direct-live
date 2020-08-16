@@ -1,7 +1,7 @@
 {
     "name": "ortb-direct",
     "version": "1.0.1",
-    "main": "app.js",
+    "main": "main.js",
     "author": "ludndev",
     "license": "MIT",
     "description": "Suivez en direct l'ORTB.",
@@ -14,7 +14,9 @@
     "scripts": {
         "start": "electron .",
         "pack": "electron-builder --dir",
-        "build": "electron-builder"
+        "dist": "electron-builder -mwl",
+        "b--win32": "electron-builder --win --ia32",
+        "b--win64": "electron-builder --win --x64"
     },
     "build": {
         "appId": "me.ludndev.ortbdirect",

@@ -1,59 +1,90 @@
-const electron = require('electron')
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
-const path = require('path')
+
+var counter = 5;
+var intervalId = null;
+var streamUrl = "https://player.infomaniak.com/?channel=69891&player=10535&ref=me.ludndev.ortbdirect";
 
 
-function createWindow () {
-  const win = new BrowserWindow({
-    minWidth: 800,
-    minHeight: 600,
-    frame: true,
-    show: false,
-    icon: __dirname + '/icon.png',
-    title: "ORTB Direct",
-    webPreferences: {
-      //preload: path.join(__dirname, 'preload.js'),
-      zoomFactor: 1,
-      nodeIntegration: false
-    }
-  })
+function finish() {
+  clearInterval(intervalId);
 
-  win.setBackgroundColor('#000')
+  try {
+    var xhr = new ( window.ActiveXObject || XMLHttpRequest )( "Microsoft.XMLHTTP" );
+    xhr.open( "HEAD", streamUrl, true );
 
-  win.on('page-title-updated', (event) => {
-    event.preventDefault()
-  })
+    xhr.onload = function () {
+      console.log("XHR Status : " + xhr.status);
+      if ( xhr.status == 200 ) {
+        
+        window.location.replace(streamUrl);
 
-  win.maximize()
+      } else {
 
-  win.setMenu(null);
+        swal({
+          title: "Êtes vous connecter à internet ?",
+          text: "Veuillez vous assurer que votre connection est active et fonctionnelle.",
+          icon: "warning",
+          closeOnClickOutside: false,
+          buttons: {
+            cancel: "QUITTER",
+            reload: "RESSAYER"
+          },
+          dangerMode: false,
+        })
+        .then((willReload) => {
+          if (willReload) {
+            location.reload();
+          } else {
+            window.close();
+          }
+        });
 
-  //win.loadURL(`file://${__dirname}/app.html`)
-  win.loadFile('./app.html')
+      }
+    };
 
-  /*win.once('ready-to-show', () => {
-    //win.show()
-  })*/
+    xhr.onerror = function(e) {
+      console.log(e);
 
-  win.show()
+      swal({
+        title: "Something going bad !",
+        text: "Oups ! Une erreur critique est survenue.",
+        icon: "warning",
+        closeOnClickOutside: false,
+        buttons: {
+          cancel: "QUITTER",
+          reload: "RESSAYER"
+        },
+        dangerMode: false,
+      })
+      .then((willReload) => {
+        if (willReload) {
+          location.reload();
+        } else {
+          window.close();
+        }
+      });
+      console.log("ERROR : ", err);
+    };
 
-  //win.loadURL("https://player.infomaniak.com/?channel=69891&player=10535&ref=me.ludndev.ortbdirect")
-
-  // win.openDevTools()
+    xhr.send();
+  } catch(err) {
+    console.log(err);
+  }
+  
 }
 
-app.whenReady().then(createWindow)
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
+function countDown() {
+  counter--;
+  if(counter == 0) finish();
+  else {
+    console.log('counter : ' + counter);
   }
-})
+}
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-  }
-})
+function start(){
+  intervalId = setInterval(countDown, 1000);
+}
 
+window.addEventListener("DOMContentLoaded", (event) => {
+  console.log("dom loaded");
+  start();
+}); 
